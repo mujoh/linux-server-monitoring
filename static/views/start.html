@@ -1,0 +1,16 @@
+TEST START
+
+<div class="row text-center">
+  <div style="min-height: 500px;" ng-repeat="feature in features" class="col-md-4 col-sm-6 row-eq-height">
+    <div class="thumbnail">
+      <img style="min-height: 50px" src="{{feature.image}}" alt="" data-toggle="modal" data-target="#popupContainers">
+      <div class="caption">
+        <h3 style="text-transform: uppercase">{{feature.name}}</h3>
+        <p>{{feature.text}}</p>
+        <p>
+          <a href="#!{{feature.link}}" class="btn btn-success" ng-class="getClass('/{{feature.name}}')">Go Now!</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

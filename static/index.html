@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="server-monitor" ng-controller="siteController">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="assets/images/favicon.png">
+
+  <title>Server Monitoring Tool</title>
+
+  <!-- Bootstrap core CSS -->
+  <!--     <link href="assets/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link rel="stylesheet" href="assets/css/sb-admin-2.min.css" />
+
+  <!-- Toastr CSS -->
+  <link rel="stylesheet" href="//unpkg.com/angular-toastr/dist/angular-toastr.css" />
+
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+</head>
+
+<body class="page-top">
+  <div ng-include="'dashboard.html'"></div>
+  <!--     <div ng-if="!check_login()">
+      <div ng-include="'login.html'"></div>
+    </div>
+    <div ng-if="check_login()">
+      <div ng-include="'dashboard.html'"></div>
+    </div> -->
+</body>
+
+<!-- Bootstrap core JavaScript
+  ================================================== -->
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script src="assets/js/angular.min.js"></script>
+<script src="assets/js/angular-route.js"></script>
+<script src="assets/js/xeditable.min.js"></script>
+<script src="assets/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
+
+<script src="controllers/siteController.js"></script>
+<script src="controllers/dashboardController.js"></script>
+
+<!-- AngularJS Material -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+<!-- AngularJS Gauge -->
+<script src="assets/js/angularjs-gauge.min.js"></script>
+
+<!-- AngularJS Charts -->
+<script src="assets/js/Chart.min.js"></script>
+<script src="assets/js/angular-chart.min.js"></script>
+
+<script>
+  window.jQuery || document.write('<script src="docs/assets/js/vendor/jquery.min.js"><\/script>')
+</script>
+<!-- <script src="assets/js/bootstrap.min.js"></script> -->
+
+<script src="//unpkg.com/angular-toastr/dist/angular-toastr.tpls.js"></script>
+
+<script src="assets/js/sb-admin-2.js"></script>
+
+<script>
+  var app = angular.module("server-monitor", ["ngRoute", "xeditable", "ui.bootstrap", "toastr", "angularjs-gauge", "chart.js"]);
+
+  app.controller('siteController', SiteController);
+  app.controller('dashboardController', DashboardController);
+
+  app.config(function ($routeProvider) {
+    $routeProvider
+      .when("/", {
+        templateUrl: "views/start.html",
+        controller: "siteController"
+      })
+      .when("/dashboard", {
+        templateUrl: "views/dashboard.html",
+        controller: "dashboardController"
+      })
+  });
+
+  app.filter('convertSeconds', function () {
+    return function (seconds) {
+      var days = Math.floor(seconds / 86400);
+      var hours = Math.floor((seconds % 86400) / 3600);
+      var mins = Math.floor(((seconds % 86400) % 3600) / 60);
+      var secs = Math.floor((seconds % 86400) % 3600) % 60;
+      return (days > 0 ? days + 'd, ' : '') + ('00' + hours).slice(-2) + ':' + ('00' + mins).slice(-2) + ':' + ('00' + secs).slice(-2);
+    };
+  });
+
+  app.filter('Filesize', function () {
+    return function (size) {
+      if (isNaN(size))
+        size = 0;
+
+      if (size < 1024)
+        return size + ' Bytes';
+
+      size /= 1024;
+
+      if (size < 1024)
+        return size.toFixed(2) + ' KB';
+
+      size /= 1024;
+
+      if (size < 1024)
+        return size.toFixed(2) + ' MB';
+
+      size /= 1024;
+
+      if (size < 1024)
+        return size.toFixed(2) + ' GB';
+
+      size /= 1024;
+
+      return size.toFixed(2) + ' TB';
+    };
+  });
+
+  app.run(function ($rootScope, $http, toastr) {
+    $rootScope.month_colors = [{
+      fill: false,
+      backgroundColor: '#fff',
+      borderColor: '#F05A25',
+      pointBackgroundColor: '#fff',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#e95f71',
+    }]
+
+    $rootScope.Utils = {
+      set_config_var: function () {
+        $rootScope.config = {
+          headers: {
+            'Authorization': 'Basic d2VudHdvcnRobWFuOkNoYW5nZV9tZQ==',
+            'Accept': 'application/json;odata=verbose',
+            "JWT": localStorage.getItem('user')
+          }
+        };
+      },
+      convertMemorySize: function (size) {
+        if (isNaN(size))
+          size = 0;
+
+        if (size < 1024)
+          return size;
+
+        size /= 1024;
+
+        if (size < 1024)
+          return size.toFixed(2);
+
+        size /= 1024;
+
+        if (size < 1024)
+          return size.toFixed(2);
+
+        size /= 1024;
+
+        if (size < 1024)
+          return size.toFixed(2);
+
+        size /= 1024;
+
+        return size.toFixed(2);
+      }
+    }
+  });
+
+</script>
+
+</html>
