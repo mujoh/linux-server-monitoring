@@ -50,12 +50,17 @@
 
 <script src="controllers/siteController.js"></script>
 <script src="controllers/dashboardController.js"></script>
+<script src="controllers/serverController.js"></script>
 
 <!-- AngularJS Material -->
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
 
 <!-- AngularJS Gauge -->
 <script src="assets/js/angularjs-gauge.min.js"></script>
+
+<!-- Moment -->
+<script src="assets/js/moment.js"></script>
+<script src="assets/js/angular-moment.js"></script>
 
 <!-- AngularJS Charts -->
 <script src="assets/js/Chart.min.js"></script>
@@ -71,10 +76,11 @@
 <script src="assets/js/sb-admin-2.js"></script>
 
 <script>
-  var app = angular.module("server-monitor", ["ngRoute", "xeditable", "ui.bootstrap", "toastr", "angularjs-gauge", "chart.js"]);
+  var app = angular.module("server-monitor", ["ngRoute", "xeditable", "ui.bootstrap", "toastr", "angularjs-gauge", "chart.js", "angularMoment"]);
 
   app.controller('siteController', SiteController);
   app.controller('dashboardController', DashboardController);
+  app.controller('serverController', ServerController);
 
   app.config(function ($routeProvider) {
     $routeProvider
@@ -85,6 +91,10 @@
       .when("/dashboard", {
         templateUrl: "views/dashboard.html",
         controller: "dashboardController"
+      })
+      .when("/server", {
+        templateUrl: "views/server_info.html",
+        controller: "serverController"
       })
   });
 

@@ -39,6 +39,12 @@ app.get('/rest/v1/dailyusage/:server', function (req, res) {
   })
 });
 
+app.get('/rest/v1/getusage/:server', function (req, res) {
+  database.collection('server_load').find().limit(15).sort({time: 1}).toArray().then(function (data) {
+    res.send(data);
+  })
+});
+
 MongoClient.connect('mongodb://' + config.database.user + ':' + config.database.password + '@' + config.database.host + ':' + config.database.port + '/' + config.database.database, function(err, db) {
   if(err) {
     console.log(err);

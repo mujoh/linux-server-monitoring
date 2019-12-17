@@ -25,6 +25,12 @@ function DashboardController($http, $scope, $rootScope, toastr) {
     })
   }
 
+  function get_info() {
+    $http.get('/rest/v1/getusage/srv01.racun.ninja').then(function(res) {
+      $scope.info = res.data;
+    })
+  }
+
   $scope.get_usage = function(server) {
     $http.get('/rest/v1/dailyusage/'+server).then(function (res) {
       data = [];
