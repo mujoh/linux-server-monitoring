@@ -40,8 +40,9 @@ app.get('/rest/v1/dailyusage/:server', function (req, res) {
 });
 
 app.get('/rest/v1/getusage/:server', function (req, res) {
-  database.collection('server_load').find().limit(15).sort({time: 1}).toArray().then(function (data) {
-    res.send(data);
+  database.collection('server_load').find({}).sort({time: -1}).limit(40).toArray().then(function (data) {
+    const sortedData = data.sort((a, b) => a.time - b.time)
+    res.send(sortedData);
   })
 });
 
