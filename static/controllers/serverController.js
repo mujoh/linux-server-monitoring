@@ -1,6 +1,6 @@
 function ServerController($http, $scope, moment) {
 
-  get_info();
+  //get_info();
 
   $scope.colors = [{
     fill: false,
@@ -87,18 +87,20 @@ function ServerController($http, $scope, moment) {
       $scope.labels = labels;
       $scope.series = ['1.load', '5.load', '15.load']
     })
+
+    timeout = setTimeout(get_info, 5000);
   }
 
   $scope.start = function() {
     $scope.stopped = false;
     $scope.loading = true;
-    setTimeout(get_info, 40000);
+    get_info();
   }
 
   $scope.stop = function() {
     $scope.stopped = true;
     $scope.loading = false;
-    clearTimeout()
+    clearTimeout(timeout);
   }
 
   $scope.start();
