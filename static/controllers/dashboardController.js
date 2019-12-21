@@ -1,7 +1,11 @@
-function DashboardController($http, $scope, $rootScope, toastr) {
+function DashboardController($http, $scope, $rootScope, toastr, $location) {
   get_server_data();
 
   $scope.loaded = false;
+
+  if(!$location.path().indexOf('server') > -1) {
+    clearTimeout($rootScope.timeout);
+  }
 
   $scope.threshold = {
     '0': { color: '#009900' },

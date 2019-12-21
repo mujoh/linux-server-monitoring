@@ -1,4 +1,4 @@
-function ServerController($http, $scope, moment) {
+function ServerController($http, $scope, moment, $rootScope) {
 
   //get_info();
 
@@ -88,7 +88,7 @@ function ServerController($http, $scope, moment) {
       $scope.series = ['1.load', '5.load', '15.load']
     })
 
-    timeout = setTimeout(get_info, 5000);
+    $rootScope.timeout = setTimeout(get_info, 5000);
   }
 
   $scope.start = function() {
@@ -100,7 +100,7 @@ function ServerController($http, $scope, moment) {
   $scope.stop = function() {
     $scope.stopped = true;
     $scope.loading = false;
-    clearTimeout(timeout);
+    clearTimeout($rootScope.timeout);
   }
 
   $scope.start();
