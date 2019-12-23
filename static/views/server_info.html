@@ -3,6 +3,61 @@
   <button class="btn btn-primary fas fa-pause" ng-show="loading" ng-class="btn_class" ng-click="stop()"></button>
 </div>
 <br>
+
+<div class="row">
+  <div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Uptime</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><img ng-hide="loaded"
+                src="../assets/images/loader-small.gif" /><span
+                ng-hide="!loaded">{{sys_info.overall.uptime | convertSeconds}}</span></div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-clock fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Processes</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><img ng-hide="loaded"
+                src="../assets/images/loader-small.gif" />{{sys_info.overall.processes | number}}</span></div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-4 col-md-6 mb-4">
+    <div class="card border-left-info shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Threads</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><img ng-hide="loaded"
+                src="../assets/images/loader-small.gif">{{sys_info.overall.threads | number}}</span></div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-cog db-icon fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-4 col-sm-12">
     <div class="card shadow mb-4">
@@ -10,10 +65,52 @@
         <h6 class="m-0 font-weight-bold text-primary">Server Load Averages 1-5-15</h6>
       </div>
       <div class="card-body">
-        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series"
+        <canvas id="line" class="chart chart-line" chart-data="data_load" chart-labels="labels_load" chart-series="series_load"
           chart-options="options" chart-click="onClick" chart-colors="colors">
         </canvas>
       </div>
     </div>
   </div>
+  <div class="col-md-4 col-sm-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daily HDD Usage</h6>
+      </div>
+      <div class="card-body">
+        <canvas id="line" class="chart chart-line" chart-data="data_hdd_usage" chart-labels="labels_hdd_usage" chart-series="series_hdd_usage"
+          chart-options="options_usage" chart-click="onClick" chart-colors="month_colors">
+        </canvas>
+      </div>
+    </div>
+  </div>
 </div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Resources Usage</h6>
+    </div>
+    <div class="card-body" style="text-align: center">
+      <div class="row">
+        <div ng-class="memory_gauge">
+          <ng-gauge thresholds="threshold" size="230" type="arch" thick="7" value="hdd_used" cap="round"
+            label="({{sys_info.hdd.hdd_used | Filesize}} / {{sys_info.hdd.hdd_total | Filesize}})"
+            foreground-color="#ff8000" background-color="rgba(204, 204, 204)" append="%"></ng-gauge>
+          <h3 class="heading-gauges">HDD Usage</h2>
+        </div>
+        <div ng-class="memory_gauge">
+          <ng-gauge thresholds="threshold" size="230" type="arch" thick="7" value="mem_used" cap="round"
+            label="({{sys_info.memory.used | Filesize}} / {{sys_info.memory.total | Filesize}})"
+            foreground-color="#ff8000" background-color="rgba(204, 204, 204)" append="%"></ng-gauge>
+          <h3 class="heading-gauges">RAM Usage</h2>
+        </div>
+        <div ng-class="memory_gauge">
+          <div ng-show="swap_total">
+            <ng-gauge thresholds="threshold" size="230" type="arch" thick="7" value="swp_used" cap="round"
+              label="({{sys_info.memory.swap_used | Filesize}} / {{sys_info.memory.swap_total | Filesize}})"
+              foreground-color="#ff8000" background-color="rgba(204, 204, 204)" append="%"></ng-gauge>
+            <h3 class="heading-gauges">Swap Usage</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

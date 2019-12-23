@@ -66,6 +66,9 @@
 <script src="assets/js/Chart.min.js"></script>
 <script src="assets/js/angular-chart.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min.js" charset="utf-8"></script>
+<script src="assets/js/PvtlD3TreemapDirective.js"></script>
+
 <script>
   window.jQuery || document.write('<script src="docs/assets/js/vendor/jquery.min.js"><\/script>')
 </script>
@@ -76,7 +79,7 @@
 <script src="assets/js/sb-admin-2.js"></script>
 
 <script>
-  var app = angular.module("server-monitor", ["ngRoute", "xeditable", "ui.bootstrap", "toastr", "angularjs-gauge", "chart.js", "angularMoment"]);
+  var app = angular.module("server-monitor", ["ngRoute", "xeditable", "ui.bootstrap", "toastr", "angularjs-gauge", "chart.js", "angularMoment", "pvtlD3Treemap"]);
 
   app.controller('siteController', SiteController);
   app.controller('dashboardController', DashboardController);
