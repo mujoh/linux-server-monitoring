@@ -1,6 +1,7 @@
 function ServerController($http, $scope, moment, $rootScope) {
 
   get_server_data();
+  get_hdd_info();
 
   $scope.threshold = {
     '0': { color: '#009900' },
@@ -78,7 +79,7 @@ function ServerController($http, $scope, moment, $rootScope) {
   }
 
   function get_load_info() {
-    $http.get('/rest/v1/getusage/srv01.racun.ninja').then(function (res) {
+    $http.get('/rest/v1/getload/srv01.racun.ninja').then(function (res) {
       one_minute_load = [];
       five_minute_load = [];
       fifteen_minute_load = [];
@@ -91,7 +92,103 @@ function ServerController($http, $scope, moment, $rootScope) {
       });
       $scope.data_load = [one_minute_load, five_minute_load, fifteen_minute_load];
       $scope.labels_load = labels;
-      $scope.series_load = ['1.load', '5.load', '15.load']
+      $scope.series_load = ['1.load', '5.load', '15.load'];
+    })
+
+    $rootScope.timeout = setTimeout(get_load_info, 5000);
+  }
+
+  function get_hdd_info() {
+
+    $scope.options_hdd = {
+      elements: {
+        point: {
+          radius: 0,
+          hitRadius: 10,
+          hoverRadius: 0
+        },
+        line: {
+          tension: 0
+        }
+      },
+      scales: {
+        xAxes: [{
+          afterTickToLabelConversion: function (data) {
+            var xLabels = data.ticks;
+  
+            xLabels.forEach(function (labels, i) {
+              xLabels[i] = moment(xLabels[i], "HH:mm:ss").format("hh:mm");
+              if (i % 2 == 1) {
+                xLabels[i] = '';
+              }
+            })
+          },
+          ticks: {
+            autoSkip: true,
+            maxRotation: 0,
+            minRotation: 0
+          },
+          gridLines: {
+            display: false,
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
+        }]
+      },
+      annotation: {
+        annotations: [{
+          drawTime: 'afterDraw', // overrides annotation.drawTime if set
+          id: 'a-line-1', // optional
+          type: 'line',
+          borderDash: [10, 10],
+          mode: 'horizontal',
+          scaleID: 'y-axis-0',
+          value: '100',
+          borderColor: 'red',
+          borderWidth: 2,
+        }]
+      },
+      tooltips: {
+        callbacks: {
+          title: function(tooltipItem) {
+            return ""
+          },
+          label: function (tooltipItem, data) {
+            return data.datasets[tooltipItem.datasetIndex].label + " : " + tooltipItem.yLabel + "%"
+          }
+        }
+      },
+      animation: {
+        duration: 0
+      }
+    }
+
+    $http.get('/rest/v1/gethddusage/srv01.racun.ninja').then(function (res) {
+      mmcblk0p2 = [];
+      others = [];
+      labels = [];
+      series = [];
+      res.data.forEach(element => {
+        element.disks_usage.forEach(element => {
+          if(element.mount == "/dev/mmcblk0p2") {
+            mmcblk0p2.push(element.percentage.replace("%", ""));
+            labels.push(moment.unix(element.time).format("hh:mm:ss"));
+            series.push(element.mount);
+          } else {
+            others.push(element.percentage.replace("%", ""));
+            labels.push(moment.unix(element.time).format("hh:mm:ss"));
+            series.push(element.mount);
+          }
+        })
+      })
+
+      $scope.data_mmcblk0p2 = [mmcblk0p2, others];
+      $scope.labels_disk = labels;
+      $scope.series_disk = series;
     })
 
     $rootScope.timeout = setTimeout(get_load_info, 5000);

@@ -39,8 +39,15 @@ app.get('/rest/v1/dailyusage/:server', function (req, res) {
   })
 });
 
-app.get('/rest/v1/getusage/:server', function (req, res) {
+app.get('/rest/v1/getload/:server', function (req, res) {
   database.collection('server_load').find({}).sort({time: -1}).limit(40).toArray().then(function (data) {
+    const sortedData = data.sort((a, b) => a.time - b.time)
+    res.send(sortedData);
+  })
+});
+
+app.get('/rest/v1/gethddusage/:server', function (req, res) {
+  database.collection('hdd_usage').find({}).sort({time: -1}).limit(40).toArray().then(function (data) {
     const sortedData = data.sort((a, b) => a.time - b.time)
     res.send(sortedData);
   })
